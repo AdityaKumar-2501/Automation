@@ -36,12 +36,13 @@
    -ht HASHTAG, --hashtag HASHTAG Hashtag to scrape posts from
    -cm MESSAGE, --message MESSAGE Comment or message to post
    -del DELAY, --delay DELAY Delay in seconds between actions
+   -s Schedule, --schedule Schedule the bot, when to start bot in format of (HH:MM)
 
    Example commands:
 
-   - `python run.py -d -cm "Hello, this is a example message" -ht "python" -del 5` The bot will start to search for users in "python" hashtag and will send a message to each of them. The delay time between each message is 5 seconds.
+   - `python .run.py -d -cm "Hello, this is a example message" -ht "python" -del 5 -s "14:20"` The bot will start to search for users in "python" hashtag and will send a message to each of them. The delay time between each message is 5 seconds and Bot start working when time is 2:30 PM.
 
-   - `python run.py -c -cm "Nice post" -ht "beats" -del 8 -a` The bot will start to search for users in "beats" hashtag and will comment in the most recent posts to each of them. The delay time will be 8 seconds and also when you run command bot will ask you for the account you want to use because of "-a" param.
+   - `python .run.py -c -cm "Nice post" -ht "beats" -del 8 -a -s "15:02"` The bot will start to search for users in "beats" hashtag and will comment in the most recent posts to each of them. The delay time will be 8 seconds and also when you run command bot will ask you for the account you want to use because of "-a" param and bot start when time is 3:02 pm.
 
 3. Follow the prompts in the terminal to provide necessary information, such as login credentials, comments, hashtags, etc.
 
