@@ -23,11 +23,11 @@
 
 ### Usage:
 
-1. Fill in the account details and desired actions in the run.py file.
+1. Fill in the account details and desired actions in the .run.py file.
 
 2. Run the script:
 
-   These are the options that you can add in `python run.py` command:
+   These are the options that you can add in `python .run.py` command:
 
    -h, --help show this help message and exit
    -a, --accounts Use multiple accounts
