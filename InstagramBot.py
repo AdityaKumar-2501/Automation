@@ -1,4 +1,5 @@
 import time
+from time import sleep
 import json
 #from selenium import webdriver
 import undetected_chromedriver as uc
@@ -37,18 +38,22 @@ class InstagramBot:
         password_field.send_keys(Keys.RETURN)
 
         # Wait for the login process to complete (you may need to adjust the delay based on your internet speed)
-        time.sleep(5)  # Wait for 5 seconds (adjust as needed)
+        time.sleep(8)  # Wait for 5 seconds (adjust as needed)
 
     def scrape_hashtag_posts(self, hashtag):
         # Open Instagram and navigate to the hashtag page
         self.driver.get(f"https://www.instagram.com/explore/tags/{hashtag}/")
-        time.sleep(8)
+        time.sleep(10)
         # Wait for the posts to load
         wait = WebDriverWait(self.driver, 10)
-        # wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="mount_0_0_GQ"]/div/div/div[2]/div/div/div/div[1]/div[1]/div[2]/section/main/article/div[2]/div')))
-        most_recent = self.driver.find_element(By.XPATH, '//div/div/div[2]/div/div/div/div[1]/div[1]/div[2]/section/main/article/div[2]/div')
+        most_recent = wait.until(EC.presence_of_element_located((By.XPATH, '/html/body/div[2]/div/div/div[2]/div/div/div/div[1]/div[1]/div[2]/section/main/article/div/div/div')))
+        # most_recent = self.driver.find_element(By.XPATH, '/html/body/div[2]/div/div/div[2]/div/div/div/div[1]/div[1]/div[2]/section/main/article/div/div/div')
         # Scrape the most recent posts from the hashtag
+        # most_recent = self.driver.find_element(By.XPATH, '//*[@id="mount_0_0_a+"]/div/div/div[2]/div/div/div/div[1]/section/main/article/div/div/div/div[1]/div[1]/a/div[1]/div[2]')
+        
         posts = most_recent.find_elements(By.TAG_NAME, "a")
+        print("post")
+        print(posts)
 
         links = []
         for post in posts:
@@ -61,31 +66,44 @@ class InstagramBot:
     
     def scrape_usernames(self, links):
         usernames = []
+        i = 0
         for link in links:
             self.driver.get(link)
-            time.sleep(3)
+            time.sleep(5)
             # Wait for the username element to load
             wait = WebDriverWait(self.driver, 10)
-            username_element = wait.until(EC.presence_of_element_located((By.XPATH, '/html/body/div[2]/div/div/div[2]/div/div/div/div[1]/div[1]/div[2]/section/main/div/div[1]/div/div[2]/div/div[1]/header/div[2]/div[1]/div[1]/div/div/span/div/div/a')))
+            # username_element = wait.until(EC.presence_of_element_located((By.XPATH, '/html/body/div[2]/div/div/div[2]/div/div/div/div[1]/div[1]/div[2]/section/main/div/div[1]/div/div[2]/div/div[1]/div/div[2]/div/div[1]/div[1]/div/span/span/div/a/div/div/span')))
+            username_element = self.driver.find_element(By.XPATH, '/html/body/div[2]/div/div/div[2]/div/div/div/div[1]/div[1]/div[2]/section/main/div/div[1]/div/div[2]/div/div[1]/div/div[2]/div/div[1]/div[1]/div/span/span/div/a/div/div/span')
             # Extract the username text
             username = username_element.text
             usernames.append(username)
+            i = i+1
+            if i == 2:
+                break
+
         
         # Remove duplicate usernames
         usernames = list(set(usernames))
+        print(usernames)
         
         return usernames
     
     def send_dm(self, usernames, message, delay_time):
         # Go to the Instagram Direct Inbox
         self.driver.get("https://www.instagram.com/direct/inbox/")
-        time.sleep(3)
+        time.sleep(10)
+        print(usernames)
 
         # Check if the notification pop-up is displayed
-        notification_popup = self.driver.find_element(By.XPATH, '//div/div/div[3]/div/div/div[1]/div/div[2]/div/div/div/div/div[2]/div/div/div[3]/button[2]')
-        if notification_popup.is_displayed():
-            notification_popup.click()
-            time.sleep(2)
+        # notification_popup = self.driver.find_element(By.XPATH, '/html/body/div[5]/div[1]/div/div[2]/div/div/div/div/div[2]/div/div/div[3]/button[2]')
+        self.driver.find_element(By.XPATH, "//button[contains(text(), 'Not Now')]").click()
+        time.sleep(2)
+        # if notification_popup.is_displayed():
+        #     notification_popup.click()
+        #     time.sleep(2)
+        #self.driver.find_element(By.XPATH, "//button[contains(text(), 'Not Now')]").click() # clicking 'not now btn'
+        #sleep(2)
+        #self.driver.find_element(By.XPATH, "//button[contains(text(), 'Not Now')]").click() # clicking 'not now btn'
 
        
         for username in usernames:
@@ -96,7 +114,7 @@ class InstagramBot:
 
             # Wait for the recipient input field to become available
             wait = WebDriverWait(self.driver, 10)
-            recipient_input = wait.until(EC.presence_of_element_located((By.XPATH, '//div/div/div[3]/div/div/div[1]/div/div[2]/div/div/div/div/div/div/div[1]/div/div[2]/div[2]/input')))
+            recipient_input = wait.until(EC.presence_of_element_located((By.XPATH, '/html/body/div[5]/div[1]/div/div[2]/div/div/div/div/div/div/div[1]/div/div[2]/div/div[2]/input')))
 
             # Type each username and press Enter to add as a recipient
             recipient_input.send_keys(username)
@@ -105,12 +123,15 @@ class InstagramBot:
             time.sleep(1)
 
             
-            select_button = wait.until(EC.element_to_be_clickable((By.XPATH, '//div/div/div[3]/div/div/div[1]/div/div[2]/div/div/div/div/div/div/div[1]/div/div[3]/div/div/div[1]/div[1]/div/div')))
+            select_button = wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/div[5]/div[1]/div/div[2]/div/div/div/div/div/div/div[1]/div/div[3]/div/div/div[1]/div[1]/div/div/div[3]/div/label/div/input')))
             select_button.click()
             time.sleep(2)
 
             # Wait for the next button to become clickable
-            next_button = wait.until(EC.element_to_be_clickable((By.XPATH, '//div/div/div[3]/div/div/div[1]/div/div[2]/div/div/div/div/div/div/div[1]/div/div[4]/div')))
+            # next_button = wait.until(EC.element_to_be_clickable((By.XPATH, '//div/div/div[3]/div/div/div[1]/div/div[2]/div/div/div/div/div/div/div[1]/div/div[4]/div')))
+            next_button = wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/div[5]/div[1]/div/div[2]/div/div/div/div/div/div/div[1]/div/div[4]/div')))
+
+            
 
             # Click the Next button to proceed to the message input
             next_button.click()
@@ -147,6 +168,7 @@ class InstagramBot:
             actions.perform()
 
             time.sleep(delay_time)
+            break
         
         self.driver.quit()
 
