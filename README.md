@@ -12,8 +12,7 @@
 ### Installation:
 
 1. Clone the repository:
-   git clone https://github.com/redianmarku/Instagram-Multi-Feature-Bot
-
+   git clone https://github.com/AdityaKumar-2501/Automation.git
 2. Install the required dependencies:
    `pip install -r requirements.txt`
 
